@@ -1,3 +1,8 @@
 page-home {
-
+#buttonsWrapper{
+    display: flex;
+}
+#buttonsWrapper button{
+    flex:1;
+}
 }
