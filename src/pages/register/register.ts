@@ -17,6 +17,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 export class RegisterPage {
 
   @ViewChild('email') email
+  @ViewChild('username') username
   @ViewChild('password') password
   @ViewChild('name') name
   @ViewChild('lastName') lastName
@@ -25,7 +26,8 @@ export class RegisterPage {
   currentPassword: any
   currentName : any
   currentLastName : any
-
+  currentUserName : any
+  createUserFlag : boolean 
   constructor(
               public navCtrl: NavController, 
               public navParams: NavParams, 
@@ -36,11 +38,13 @@ export class RegisterPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RegisterPage');
+    let abc
+    
   }
 
   register(){
-   
       this.currentEmail = this.email.value,
+      this.currentUserName  = this.username.value,
       this.currentName =  this.name.value,
       this.currentLastName =  this.lastName.value,
       this.currentPassword =  this.password.value
@@ -59,11 +63,21 @@ export class RegisterPage {
     this.clearInputs()
   }
 
+  alertRegisterUnsuccessful(text){
+    let alert = this.alertCtrl.create({
+      title: "Registration Failed",
+      subTitle: text,
+      buttons: ['Ok']
+    })
+    alert.present()
+  }
+
   clearInputs(){
     this.email.value = ""
     this.name.value = ""
     this.lastName.value = ""
     this.password.value = ""
+    this.username.value = ""
   }
 
   validateRegister() : boolean{
@@ -73,24 +87,52 @@ export class RegisterPage {
   }
 
   createUser(){
-    this.fireAuth.auth.createUserWithEmailAndPassword(this.currentEmail, this.currentPassword).then( data => {
-      this.fireAuth.auth.signInWithEmailAndPassword(this.currentEmail,this.currentPassword).then(data => {
-        let key = this.fireAuth.auth.currentUser.uid.toString()
-        let user = {
-          name: this.currentName,
-          lastName: this.currentLastName,
-          password: this.currentPassword
+    this.createUserFlag = true
+    let abc
+    console.log(this.currentUserName)
+    this.firebase.object("Users").valueChanges().subscribe(data => {
+      abc = data
+      for (let key in abc) { // retrieving usernames from firebase for validation
+        let value = data[key];
+        if(value.username == this.currentUserName){
+         this.createUserFlag = false; break;
         }
-        const itemsRef = this.firebase.database.ref("Users/"+key).set(user).then(data => {
-        this.alertRegisterSuccessful()
+      }
+
+      if(this.createUserFlag){
+        this.fireAuth.auth.createUserWithEmailAndPassword(this.currentEmail, this.currentPassword).then( data => {
+          this.fireAuth.auth.signInWithEmailAndPassword(this.currentEmail,this.currentPassword).then(data => {
+            let key = this.fireAuth.auth.currentUser.uid.toString()
+            let user = {
+              username: this.currentUserName,
+              name: this.currentName,
+              lastName: this.currentLastName,
+              password: this.currentPassword
+            }
+            const itemsRef = this.firebase.database.ref("Users/"+key).set(user).then(data => {
+            this.alertRegisterSuccessful()
+            }).catch(err => {
+            let errorCode = err.code
+            let errorMessage = err.message
+            console.log(errorCode)
+            console.log(errorMessage)
+            })
+          })
         }).catch(err => {
-          var errorCode = err.code
-          var errorMessage = err.message
+          let errorCode = err.code
+          let errorMessage = err.message
           console.log(errorCode)
+          this.alertRegisterUnsuccessful(errorMessage)
           console.log(errorMessage)
-        })
-      })
+          })
+      } // closing flag conditional
+      else{
+        console.log(this.createUserFlag)
+        this.alertRegisterUnsuccessful("Check username")
+      }
     })
-  } 
+    
+  }
+   
 
 }

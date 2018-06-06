@@ -7,26 +7,31 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>register</ion-title>
+    <ion-title>Register</ion-title>
   </ion-navbar>
 
 </ion-header>
 <ion-content padding>
 
-
-
-      <ion-card>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12>
+        <ion-card>
           <ion-card-header>
             Give us some information.
           </ion-card-header>
         
           <ion-list>
-
               <ion-item>
                 <ion-label floating>Email</ion-label>
                 <ion-input type="text" #email></ion-input>
               </ion-item>
           
+              <ion-item>
+                <ion-label floating>Username</ion-label>
+                <ion-input type="text" #username></ion-input>
+              </ion-item>
+
               <ion-item>
                   <ion-label floating>FirstName</ion-label>
                   <ion-input type="text" #name></ion-input>
@@ -46,5 +51,10 @@
 
             <button block ion-button (click)="register()"> Register </button> 
         </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+     
 
 </ion-content>

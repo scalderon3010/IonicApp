@@ -12,6 +12,7 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { RegisterPage } from '../pages/register/register';
 import { LoginPage } from '../pages/login/login';
+import { ChatPage } from '../pages/chat/chat';
 
 
 const firebaseConfig = {
@@ -23,14 +24,13 @@ const firebaseConfig = {
   messagingSenderId: "848993314479"
 };
 
-
-
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     LoginPage,
-    RegisterPage
+    RegisterPage,
+    ChatPage
   ],
   imports: [
     BrowserModule,
@@ -44,7 +44,8 @@ const firebaseConfig = {
     MyApp,
     HomePage,
     LoginPage,
-    RegisterPage
+    RegisterPage,
+    ChatPage
   ],
   providers: [
     StatusBar,

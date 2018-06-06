@@ -5,14 +5,42 @@
   Ionic pages and navigation.
 -->
 <ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons start>
+      <button ion-button icon-only (click) = "presentActionSheet()">
+        <ion-icon name="more" ></ion-icon>
+      </button>
+    </ion-buttons>
 
-  <ion-navbar>
-    <ion-title>chat</ion-title>
-  </ion-navbar>
+    <ion-title>Chat ({{UsuarioActual}})</ion-title>
+    
+    <ion-buttons end>
+      <button ion-button icon-only>
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
 
+  </ion-toolbar>
 </ion-header>
 
 
-<ion-content padding>
 
+<ion-content padding>
+  <div id="chatMessages">
+    <div class="message" *ngFor="let e of messages">
+      <div [class]="e.username == CurrentUserName ? 'innerMessage messageRight' : 'innerMessage messageLeft'" >
+      <div class="username">{{ e.username}}</div>
+      <div class="message">{{ e.message}}</div>
+    </div> 
+    </div>
+  </div>
 </ion-content>
+  <ion-footer>
+    <div id="footer">
+     <div class="elem"><ion-input type="text" [(ngModel)] = "message"></ion-input></div> 
+     <div class="elem"><button ion-button icon-only (click)="sendMessage()"><ion-icon name="send"></ion-icon> </button></div> 
+    </div>
+  </ion-footer>
+  <!-- <ion-toolbar color="light">  </ion-toolbar>-->
+
+
